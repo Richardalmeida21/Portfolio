@@ -8,19 +8,19 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Hero Section - Vídeo Scroll-Controlled */
+/* Hero Section - Vídeo automático */
 .hero-section {
   position: relative;
-  height: 300vh;
-  overflow: visible;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .video-wrapper {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   z-index: 0;
   overflow: hidden;
   background: #0a0a0a;
@@ -54,13 +54,43 @@ html {
   pointer-events: none;
 }
 
+/* Mensagem Inicial Centralizada */
+.initial-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 3;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.initial-text {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.8);
+  margin: 0;
+}
+
+.initial-subtitle {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+}
+
 /* Scroll Indicator Inicial */
 .scroll-indicator-initial {
   position: fixed;
   bottom: 10%;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 2;
+  z-index: 3;
+  pointer-events: none;
 }
 
 /* Texto Final - Aparece no canto esquerdo quando vídeo acaba */
@@ -74,10 +104,11 @@ html {
   pointer-events: none;
   max-width: 45%;
   padding: 1.5rem;
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(10px);
   border-radius: 1rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: float 6s ease-in-out infinite;
 }
 
 .reveal-text {
@@ -130,8 +161,350 @@ html {
   box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
 }
 
+@keyframes float {
+  0%, 100% {
+    transform: translateY(-50%) translateY(0px);
+  }
+  50% {
+    transform: translateY(-50%) translateY(-10px);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+  }
+  50% {
+    box-shadow: 0 15px 40px rgba(102, 126, 234, 0.8), 0 0 60px rgba(102, 126, 234, 0.3);
+  }
+}
+
+.saiba-mais-btn {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
 .saiba-mais-btn:active {
   transform: scale(0.98);
+}
+
+/* Overlay que escurece a tela */
+.dark-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000000;
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* Animação de gradiente suave que preenche o fundo */
+.wave-animation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #000000;
+}
+
+/* Gradiente interativo que segue o mouse */
+.gradient-bg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: 
+    radial-gradient(ellipse at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(139, 92, 246, 0.25) 0%, transparent 40%),
+    radial-gradient(ellipse at calc(100% - var(--mouse-x, 50%)) calc(100% - var(--mouse-y, 50%)), rgba(236, 72, 153, 0.15) 0%, transparent 35%),
+    radial-gradient(ellipse at 50% 50%, rgba(99, 102, 241, 0.1) 0%, transparent 50%);
+  transition: background 0.3s ease-out;
+}
+
+.gradient-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+}
+
+/* Conteúdo centralizado */
+.content-overlay {
+  position: relative;
+  z-index: 20;
+  text-align: center;
+  padding: 2rem;
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+}
+
+/* Animação de entrada suave */
+.content-overlay.animate-in .anim-tag {
+  animation: fadeSlideUp 0.8s ease-out 0.2s both;
+}
+
+.content-overlay.animate-in .anim-text {
+  animation: fadeSlideUp 0.8s ease-out 0.4s both;
+}
+
+.content-overlay.animate-in .anim-name {
+  animation: fadeSlideUp 0.8s ease-out 0.6s both;
+}
+
+.content-overlay.animate-in .anim-subtitle {
+  animation: fadeSlideUp 0.8s ease-out 0.8s both;
+}
+
+.content-overlay.animate-in .anim-btn {
+  animation: fadeSlideUp 0.8s ease-out 1s both;
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Tag de contexto - movida para baixo */
+.anim-tag {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(240, 240, 240, 0.75);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  padding: 0.6rem 1.25rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50px;
+  margin-top: 1.5rem;
+  margin-bottom: 2rem;
+  opacity: 0;
+}
+
+.anim-text {
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  font-weight: 300;
+  color: rgba(250, 250, 250, 0.9);
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.05em;
+  opacity: 0;
+}
+
+.anim-name {
+  font-size: clamp(3.5rem, 8vw, 6rem);
+  font-weight: 200;
+  background: linear-gradient(90deg, #a78bfa 0%, #c084fc 25%, #f472b6 50%, #c084fc 75%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 0 1rem 0;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  opacity: 0;
+  position: relative;
+  z-index: 10;
+}
+
+/* Glow sutil atrás do nome */
+.anim-name::before {
+  content: 'Richard Camargo';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #a78bfa 0%, #c084fc 25%, #f472b6 50%, #c084fc 75%, #a78bfa 100%);
+  filter: blur(40px);
+  opacity: 0.3;
+  z-index: -1;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.anim-subtitle {
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+  color: rgba(245, 245, 245, 0.85);
+  margin-bottom: 1rem;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  max-width: 900px;
+  white-space: nowrap;
+  opacity: 0;
+}
+
+.anim-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.9rem 5rem;
+  font-size: 1rem;
+  font-weight: 400;
+  color: rgba(250, 250, 250, 0.95);
+  background: rgba(167, 139, 250, 0.06);
+  border: 1px solid rgba(167, 139, 250, 0.5);
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: auto;
+  letter-spacing: 0.06em;
+  opacity: 0;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 18px rgba(167, 139, 250, 0.25), 0 0 40px rgba(244, 114, 182, 0.1);
+  animation: btn-glow-pulse 3s ease-in-out infinite;
+}
+
+.anim-btn::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 50px;
+  padding: 1px;
+  background: linear-gradient(90deg, #a78bfa, #f472b6, #a78bfa);
+  background-size: 200% 100%;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  animation: border-spin 3s linear infinite;
+  opacity: 0.8;
+}
+
+@keyframes border-spin {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+@keyframes btn-glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 18px rgba(167, 139, 250, 0.25), 0 0 40px rgba(244, 114, 182, 0.1);
+    border-color: rgba(167, 139, 250, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 35px rgba(167, 139, 250, 0.55), 0 0 70px rgba(244, 114, 182, 0.25), 0 0 100px rgba(167, 139, 250, 0.1);
+    border-color: rgba(244, 114, 182, 0.7);
+  }
+}
+
+.anim-btn:hover {
+  background: rgba(167, 139, 250, 0.15);
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 0 50px rgba(167, 139, 250, 0.7), 0 0 100px rgba(244, 114, 182, 0.3);
+  border-color: rgba(244, 114, 182, 0.8);
+}
+
+.anim-btn:hover .btn-arrow {
+  transform: translateX(5px);
+}
+
+.btn-arrow {
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+  }
+  50% {
+    box-shadow: 0 15px 40px rgba(102, 126, 234, 0.8), 0 0 60px rgba(102, 126, 234, 0.3);
+  }
+}
+
+/* Ocultar seções até clicar */
+.hidden-section {
+  display: none !important;
+}
+
+.sobre-section.visible {
+  display: flex;
+  animation: fadeSlideUp 0.8s ease-out both;
+}
+
+/* Seção Sobre */
+.sobre-section {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  background: linear-gradient(180deg, #000000 0%, #0a0a0a 100%);
+  z-index: 200;
+}
+
+.sobre-content {
+  max-width: 800px;
+  text-align: center;
+}
+
+.sobre-title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 200;
+  background: linear-gradient(90deg, #a78bfa 0%, #c084fc 50%, #f472b6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 2rem;
+  letter-spacing: -0.02em;
+}
+
+.sobre-text {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.8;
+  margin-bottom: 2.5rem;
+}
+
+.sobre-text p {
+  margin-bottom: 1rem;
+}
+
+.sobre-skills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.skill-tag {
+  padding: 0.5rem 1.25rem;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50px;
+  transition: all 0.3s ease;
+}
+
+.skill-tag:hover {
+  background: rgba(167, 139, 250, 0.15);
+  border-color: rgba(167, 139, 250, 0.4);
+  transform: translateY(-2px);
 }
 
 .mouse {
@@ -394,12 +767,16 @@ html {
     font-size: 0.9rem;
   }
   
-  /* Vídeo posicionado à esquerda em mobile */
+  /* Vídeo full screen e fundo preto puro */
   .hero-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
     object-fit: cover;
-    width: 100%;
-    height: 100%;
-    object-position: 70% center; /* Move vídeo pra esquerda */
+    object-position: center;
+    background-color: #000;
   }
 }
 

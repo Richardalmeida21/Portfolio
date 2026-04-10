@@ -1,11 +1,15 @@
 import { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import Navbar from './components/Navbar'
 import './App.css'
 
 function App() {
   const videoRef = useRef(null)
   const heroRef = useRef(null)
   const [videoDuration, setVideoDuration] = useState(0)
-  const [scrollProgress, setScrollProgress] = useState(0)
+  const [videoEnded, setVideoEnded] = useState(false)
+  const [mousePos, setMousePos] = useState({ x: 50, y: 50 })
+  const navigate = useNavigate()
 
   useEffect(() => {
     const video = videoRef.current
@@ -13,139 +17,114 @@ function App() {
 
     const handleLoadedMetadata = () => {
       setVideoDuration(video.duration)
-      video.pause()
+    }
+
+    const handleVideoEnded = () => {
+      setVideoEnded(true)
     }
 
     video.addEventListener('loadedmetadata', handleLoadedMetadata)
+    video.addEventListener('ended', handleVideoEnded)
     
     if (video.readyState >= 2) {
       setVideoDuration(video.duration)
-      video.pause()
     }
 
     return () => {
       video.removeEventListener('loadedmetadata', handleLoadedMetadata)
+      video.removeEventListener('ended', handleVideoEnded)
     }
   }, [])
 
+  // Vídeo roda automaticamente, scroll não controla mais
+
+  // Efeito de mouse para gradiente interativo
   useEffect(() => {
-    const video = videoRef.current
-    if (!video || !videoDuration) return
-
-    // Vídeo roda linearmente de 0 a 100% conforme scroll
-    const targetTime = scrollProgress * videoDuration
-    
-    if (Math.abs(video.currentTime - targetTime) > 0.02) {
-      video.currentTime = targetTime
+    const handleMouseMove = (e) => {
+      const x = (e.clientX / window.innerWidth) * 100
+      const y = (e.clientY / window.innerHeight) * 100
+      setMousePos({ x, y })
     }
-  }, [scrollProgress, videoDuration])
+    window.addEventListener('mousemove', handleMouseMove)
+    return () => window.removeEventListener('mousemove', handleMouseMove)
+  }, [])
 
-  useEffect(() => {
-    let ticking = false
-
-    const handleScroll = () => {
-      if (!heroRef.current || !videoDuration) return
-
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const windowHeight = window.innerHeight
-          const scrollY = window.scrollY
-          
-          // Hero tem altura de 300vh para scroll infinito
-          const heroHeight = windowHeight * 3
-          
-          // Calcula progresso do scroll (0 a 1)
-          const progress = Math.max(0, Math.min(1, scrollY / (heroHeight - windowHeight)))
-          setScrollProgress(progress)
-          
-          ticking = false
-        })
-        ticking = true
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    handleScroll()
-
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [videoDuration])
-
-  // Texto aparece no final do vídeo (85%)
-  const textOpacity = scrollProgress > 0.85 
-    ? Math.min(1, (scrollProgress - 0.85) / 0.15) 
-    : 0
-  
-  // Botão aparece no final (90%)
-  const buttonOpacity = scrollProgress > 0.90 
-    ? Math.min(1, (scrollProgress - 0.90) / 0.10) 
-    : 0
+  // Quando vídeo acaba, mostra a seção final
+  const finalOpacity = videoEnded ? 1 : 0
 
   const handleClick = () => {
-    // Redireciona para outra página
-    window.location.href = '/sobre'
+    navigate('/sobre')
   }
 
   return (
+    <>
+    <Navbar />
     <section ref={heroRef} className="hero-section">
-      <div className="video-wrapper">
+      {/* Vídeo com wrapper que some quando termina */}
+      <div 
+        className="video-wrapper"
+        style={{
+          opacity: videoEnded ? 0 : 1,
+          transition: 'opacity 0.5s ease'
+        }}
+      >
         <video
           ref={videoRef}
           className="hero-video"
           muted
           playsInline
           preload="auto"
-        >
-          <source src="/Video_Fluid.mp4" type="video/mp4" />
-        </video>
-        <div 
-          className="video-overlay" 
+          autoPlay
+          playbackRate={2.0}
           style={{
-            opacity: scrollProgress > 0.85 ? 0.95 : 0.2,
+            opacity: videoEnded ? 0 : 1,
             transition: 'opacity 0.5s ease'
           }}
-        />
+        >
+          <source src="/Video_Fundo_Portfolio.mp4" type="video/mp4" />
+        </video>
       </div>
-
-      {/* Indicador de scroll inicial */}
-      {scrollProgress < 0.1 && (
-        <div className="scroll-indicator-initial">
-          <div className="mouse">
-            <div className="wheel"></div>
-          </div>
-        </div>
-      )}
-
-      {/* Texto e botão aparecem quando vídeo acaba */}
+      
+      {/* Fundo preto aparece quando vídeo termina */}
       <div 
-        className="hero-text-final"
+        className="dark-overlay"
+        style={{
+          opacity: videoEnded ? 1 : 0,
+          transition: 'opacity 0.5s ease'
+        }}
+      />
+
+      {/* Animação que aparece quando vídeo termina */}
+      <div 
+        className="wave-animation"
         style={{ 
-          opacity: textOpacity,
-          transform: `translateY(${(1 - textOpacity) * 30}px)`,
-          transition: 'opacity 0.5s ease, transform 0.5s ease'
+          opacity: finalOpacity,
+          transition: 'opacity 0.8s ease'
         }}
       >
-        <h1 className="reveal-text">Olá, eu sou</h1>
-        <h2 className="reveal-name">Richard Camargo</h2>
-        <p className="reveal-subtitle">Desenvolvedor Full Stack & UI/UX Designer</p>
-        
-        <div
-          className="hero-button-wrapper"
+        <div 
+          className="gradient-bg"
           style={{
-            opacity: buttonOpacity,
-            transform: `translateY(${(1 - buttonOpacity) * 20}px)`,
-            transition: 'opacity 0.5s ease, transform 0.5s ease'
+            '--mouse-x': `${mousePos.x}%`,
+            '--mouse-y': `${mousePos.y}%`
           }}
-        >
-          <button 
-            className="saiba-mais-btn"
-            onClick={handleClick}
-            style={{ pointerEvents: buttonOpacity > 0.5 ? 'auto' : 'none' }}
-          >
+        ></div>
+        
+        <div className={`content-overlay ${finalOpacity > 0.5 ? 'animate-in' : ''}`}>
+          <h2 className="anim-name">Richard Camargo</h2>
+          <p className="anim-subtitle">Transformando ideias e códigos em experiências incríveis</p>
+          <span className="anim-tag">Full Stack Developer | UI/UX Designer</span>
+          <button className="anim-btn" onClick={handleClick}>
             Saiba mais
+            <svg className="btn-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
           </button>
         </div>
       </div>
     </section>
+    
+    </>
   )
 }
 
