@@ -735,9 +735,9 @@
 /* ── Responsivo ───────────────────────────────────── */
 @media (max-width: 860px) {
   .showroom-stage {
-    flex-direction: column-reverse;
+    flex-direction: column;
     gap: 1.5rem;
-    padding: 0 1.5rem 1rem;
+    padding: 5.5rem 1.5rem 1rem;
     overflow-y: auto;
     align-items: flex-start;
     scrollbar-width: none;
@@ -753,7 +753,8 @@
   }
 
   .mockup-stage {
-    margin-top: 5.5rem;
+    order: -1;
+    margin-top: 0;
   }
 
   .hud-mockup {

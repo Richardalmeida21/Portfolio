@@ -368,22 +368,24 @@ function Projetos() {
     return () => window.removeEventListener('wheel', onWheel)
   }, [])
 
-  // swipe vertical no mobile → navega projetos (igual scroll no desktop)
+  // swipe vertical no mobile → desativado (navegação pelos cards abaixo)
   useEffect(() => {
-    const THRESHOLD = 40
-    let touchStartY = 0
-    const onTouchStart = (e) => { touchStartY = e.touches[0].clientY }
-    const onTouchEnd = (e) => {
-      const dy = e.changedTouches[0].clientY - touchStartY
-      if (Math.abs(dy) < THRESHOLD) return
-      if (dy < 0) setActive(a => Math.min(a + 1, projetos.length - 1))
-      else        setActive(a => Math.max(a - 1, 0))
-    }
-    window.addEventListener('touchstart', onTouchStart, { passive: true })
-    window.addEventListener('touchend', onTouchEnd, { passive: true })
-    return () => {
-      window.removeEventListener('touchstart', onTouchStart)
-      window.removeEventListener('touchend', onTouchEnd)
+    if (window.innerWidth >= 860) {
+      const THRESHOLD = 40
+      let touchStartY = 0
+      const onTouchStart = (e) => { touchStartY = e.touches[0].clientY }
+      const onTouchEnd = (e) => {
+        const dy = e.changedTouches[0].clientY - touchStartY
+        if (Math.abs(dy) < THRESHOLD) return
+        if (dy < 0) setActive(a => Math.min(a + 1, projetos.length - 1))
+        else        setActive(a => Math.max(a - 1, 0))
+      }
+      window.addEventListener('touchstart', onTouchStart, { passive: true })
+      window.addEventListener('touchend', onTouchEnd, { passive: true })
+      return () => {
+        window.removeEventListener('touchstart', onTouchStart)
+        window.removeEventListener('touchend', onTouchEnd)
+      }
     }
   }, [])
 
