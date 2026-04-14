@@ -36,15 +36,15 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 2px;
-  background: rgba(255,255,255,0.06);
+  height: 4px;
+  background: rgba(255,255,255,0.08);
   z-index: 100;
 }
 
 .progress-fill {
   height: 100%;
   transition: width 0.6s cubic-bezier(0.4,0,0.2,1), background 0.6s ease;
-  border-radius: 0 2px 2px 0;
+  border-radius: 0 4px 4px 0;
 }
 
 /* ── Contador ─────────────────────────────────────── */
@@ -106,6 +106,7 @@
   font-weight: 200;
   line-height: 1.1;
   letter-spacing: -0.02em;
+  padding-bottom: 0.15em;
   background: linear-gradient(135deg, #ffffff 0%, var(--accent, #a78bfa) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -228,6 +229,23 @@
   transform: translateY(-2px);
 }
 
+.hud-private-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1.25rem;
+  border-radius: 50px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: rgba(255,255,255,0.35);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  text-transform: uppercase;
+  cursor: default;
+  user-select: none;
+}
+
 /* ── Mockup 3D flutuante ──────────────────────────── */
 .mockup-stage {
   flex: 0 0 min(52%, 560px);
@@ -272,7 +290,7 @@
 
 /* ── HUD mockup base ──────────────────────────────── */
 .hud-mockup {
-  width: clamp(260px, 36vw, 460px);
+  width: clamp(280px, 42vw, 580px);
   background: rgba(10,8,20,0.88);
   border: 1px solid rgba(255,255,255,0.09);
   border-radius: 14px;
@@ -304,6 +322,119 @@
   font-size: 0.65rem;
   color: rgba(255,255,255,0.22);
   letter-spacing: 0.04em;
+}
+
+/* ── Video mockup ─────────────────────────────────── */
+.mockup-video-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.mockup-tabs {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.mockup-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 1rem;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.4);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: 0.04em;
+}
+
+.mockup-tab:hover {
+  background: rgba(255,255,255,0.07);
+  color: rgba(255,255,255,0.7);
+}
+
+.mockup-tab.active {
+  background: rgba(255,255,255,0.06);
+}
+
+/* Moldura Desktop */
+.frame-desktop {
+  width: clamp(320px, 50vw, 680px);
+  background: #0e0c18;
+  border: 1.5px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 24px 70px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.04);
+}
+
+.frame-desktop-bar {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 9px 12px;
+  background: rgba(255,255,255,0.03);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+
+.frame-desktop-base {
+  height: 14px;
+  background: rgba(255,255,255,0.025);
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Moldura Mobile */
+.frame-mobile {
+  width: clamp(180px, 18vw, 260px);
+  background: #0e0c18;
+  border: 2px solid rgba(255,255,255,0.14);
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: 0 24px 70px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.04);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 6px;
+  gap: 8px;
+}
+
+.frame-mobile-notch {
+  width: 50px;
+  height: 6px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.frame-mobile-home {
+  width: 36px;
+  height: 5px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.mockup-video-el {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border: none;
+  outline: none;
+  pointer-events: none;
+}
+
+.mockup-video-el--mobile {
+  border-radius: 10px;
+}
+
+/* mockup estático (sem float) */
+.mockup-static {
+  position: relative;
 }
 
 /* ── Dashboard mockup ─────────────────────────────── */
@@ -606,10 +737,13 @@
   .showroom-stage {
     flex-direction: column-reverse;
     gap: 1.5rem;
-    padding: 4rem 1.5rem 1rem;
+    padding: 5.5rem 1.5rem 1rem;
     overflow-y: auto;
     align-items: flex-start;
+    scrollbar-width: none;
   }
+
+  .showroom-stage::-webkit-scrollbar { display: none; }
 
   .hud-panel, .mockup-stage {
     flex: unset;
@@ -623,6 +757,15 @@
     margin: 0 auto;
   }
 
+  .mockup-video-wrap {
+    width: 100%;
+  }
+
+  .frame-desktop {
+    width: 100%;
+    max-width: 100%;
+  }
+
   .mockup-float { animation: none; }
 
   .project-counter {
@@ -631,8 +774,32 @@
   }
 
   .showroom-nav {
-    justify-content: flex-start;
-    padding: 0 1rem 1.5rem;
+    justify-content: space-between;
+    padding: 0 0.75rem 1.5rem;
+    gap: 0.4rem;
+  }
+
+  .nav-thumb {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 0.45rem 0.6rem;
+    align-items: center;
+  }
+
+  .nav-thumb-title {
+    font-size: 0.65rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+
+  .nav-thumb-sub {
+    font-size: 0.55rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
   }
 }
 

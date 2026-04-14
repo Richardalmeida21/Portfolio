@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import Navbar from '../components/Navbar'
 import './Projetos.css'
 
@@ -6,45 +6,57 @@ import './Projetos.css'
 const projetos = [
   {
     id: 1,
-    title: 'Projeto Principal',
-    subtitle: 'Full Stack · SaaS',
-    description: 'Aplicação full stack com foco em performance e UX. Arquitetura escalável, auth real em tempo real e design system próprio.',
-    tags: ['React', 'Node.js', 'TypeScript', 'Supabase'],
+    title: 'Eora Eyewear',
+    subtitle: 'E-commerce · Nuvemshop',
+    description: 'Personalização avançada de código-fonte para e-commerce. Customização total do core Liquid/Nuvemshop com implementação de funcionalidades exclusivas via código, eliminando a dependência de apps externos e melhorando o tempo de carregamento.',
+    tags: ['Nuvemshop', 'Liquid', 'JavaScript', 'CSS / Sass', 'UX Design'],
     status: 'Em produção',
     statusColor: '#3ECF8E',
-    metric: '+40%', metricLabel: 'retenção de usuários',
-    liveUrl: '#', codeUrl: '#',
+    metric: '', metricLabel: '',
+    liveUrl: 'https://www.eoraeyewear.com/', codeUrl: '#',
+    liveLabel: 'Visitar Loja',
     accent: '#8B5CF6',
     bgGradient: 'radial-gradient(ellipse 80% 60% at 60% 40%, rgba(139,92,246,0.22) 0%, transparent 70%)',
-    mockup: 'dashboard',
+    mockup: 'video',
+    video: '/Eora.mp4',
+    videoMobile: '/eora_mobile.mp4',
+    urlLabel: 'eoraeyewear.com',
   },
   {
     id: 2,
-    title: 'Lojas Nuvemshop',
-    subtitle: 'E-commerce · Liquid',
-    description: 'Desenvolvimento de código-fonte personalizado para lojas, manipulando o core da plataforma para layouts e funcionalidades exclusivas.',
-    tags: ['Liquid', 'JavaScript', 'CSS', 'Nuvemshop'],
+    title: 'Rich Training',
+    subtitle: 'SaaS · Full Stack',
+    description: 'Uma plataforma pensada para transformar a rotina de treinos em dados acionáveis. Foco em UX minimalista e sem fricção, com fluxo de onboarding intuitivo e sistema de registro de performance pixel-perfect — fazendo da tecnologia uma aliada da alta performance física.',
+    tags: ['React', 'TypeScript', 'Supabase', 'PostgreSQL', 'Tailwind CSS'],
     status: 'Em produção',
     statusColor: '#3ECF8E',
-    metric: '+20%', metricLabel: 'conversão',
-    liveUrl: '#', codeUrl: '#',
-    accent: '#F472B6',
-    bgGradient: 'radial-gradient(ellipse 80% 60% at 40% 60%, rgba(244,114,182,0.18) 0%, transparent 70%)',
-    mockup: 'shop',
+    metric: '', metricLabel: '',
+    liveUrl: 'https://richtraining.vercel.app/', codeUrl: '#',
+    liveLabel: 'Acessar RichTraining',
+    accent: '#3ECF8E',
+    bgGradient: 'radial-gradient(ellipse 80% 60% at 40% 60%, rgba(62,207,142,0.18) 0%, transparent 70%)',
+    mockup: 'video',
+    video: '/richtraining.mp4',
+    videoMobile: '/richtraining_mobile.mp4',
+    urlLabel: 'richtraining.app',
   },
   {
     id: 3,
-    title: 'Sistemas SEFAZ-SP',
-    subtitle: 'Gov · Backend',
-    description: 'Suporte técnico especializado para sistemas críticos da SEFAZ-SP na Castgroup, lidando com alta demanda governamental.',
-    tags: ['Java', 'Spring Boot', 'SQL', 'Oracle'],
+    title: 'Agenda Maestria',
+    subtitle: 'Enterprise Systems · Full Stack',
+    description: 'Sistema de agenciamento de alta performance focado em escalabilidade e segurança. Ecossistema completo com Java + Spring Boot para uma API REST robusta em Clean Architecture. O diferencial técnico reside na gestão eficiente de concorrência e integridade dos dados, entregando uma solução de nível corporativo pronta para alta demanda.',
+    tags: ['Java', 'Spring Boot', 'React', 'TypeScript', 'REST API', 'PostgreSQL'],
     status: 'Em produção',
-    statusColor: '#38BDF8',
-    metric: '99.9%', metricLabel: 'uptime',
+    statusColor: '#3ECF8E',
+    metric: '', metricLabel: '',
     liveUrl: '#', codeUrl: '#',
+    private: true,
     accent: '#38BDF8',
     bgGradient: 'radial-gradient(ellipse 80% 60% at 55% 45%, rgba(56,189,248,0.18) 0%, transparent 70%)',
-    mockup: 'terminal',
+    mockup: 'image',
+    image: '/Agenda.png',
+    imageMobile: '/Agenda_mobile.png',
+    urlLabel: 'agendamaestria.app',
   },
   {
     id: 4,
@@ -63,6 +75,103 @@ const projetos = [
 ]
 
 /* ─── Mockups ────────────────────────────────────────────────────────────────── */
+function MockupVideo({ video, videoMobile, accent, urlLabel }) {
+  const [tab, setTab] = useState('desktop')
+  const isDesktop = tab === 'desktop'
+
+  return (
+    <div className="mockup-video-wrap">
+      {/* Tabs */}
+      <div className="mockup-tabs">
+        <button
+          className={`mockup-tab ${isDesktop ? 'active' : ''}`}
+          style={isDesktop ? { borderColor: accent, color: accent } : {}}
+          onClick={() => setTab('desktop')}
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          Desktop
+        </button>
+        <button
+          className={`mockup-tab ${!isDesktop ? 'active' : ''}`}
+          style={!isDesktop ? { borderColor: accent, color: accent } : {}}
+          onClick={() => setTab('mobile')}
+        >
+          <svg width="11" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="18" r="1" fill="currentColor"/></svg>
+          Mobile
+        </button>
+      </div>
+
+      {/* Moldura Desktop */}
+      {isDesktop && (
+        <div className="frame-desktop">
+          <div className="frame-desktop-bar">
+            <span className="hud-dot" /><span className="hud-dot" /><span className="hud-dot" />
+            <span className="hud-url">{urlLabel || 'app'}</span>
+          </div>
+          <video className="mockup-video-el" src={video} autoPlay muted loop playsInline />
+          <div className="frame-desktop-base" />
+        </div>
+      )}
+
+      {/* Moldura Mobile */}
+      {!isDesktop && (
+        <div className="frame-mobile">
+          <div className="frame-mobile-notch" />
+          <video className="mockup-video-el mockup-video-el--mobile" src={videoMobile} autoPlay muted loop playsInline />
+          <div className="frame-mobile-home" />
+        </div>
+      )}
+    </div>
+  )
+}
+
+function MockupImage({ image, imageMobile, accent, urlLabel }) {
+  const [tab, setTab] = useState('desktop')
+  const isDesktop = tab === 'desktop'
+
+  return (
+    <div className="mockup-video-wrap">
+      <div className="mockup-tabs">
+        <button
+          className={`mockup-tab ${isDesktop ? 'active' : ''}`}
+          style={isDesktop ? { borderColor: accent, color: accent } : {}}
+          onClick={() => setTab('desktop')}
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          Desktop
+        </button>
+        <button
+          className={`mockup-tab ${!isDesktop ? 'active' : ''}`}
+          style={!isDesktop ? { borderColor: accent, color: accent } : {}}
+          onClick={() => setTab('mobile')}
+        >
+          <svg width="11" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="18" r="1" fill="currentColor"/></svg>
+          Mobile
+        </button>
+      </div>
+
+      {isDesktop && (
+        <div className="frame-desktop">
+          <div className="frame-desktop-bar">
+            <span className="hud-dot" /><span className="hud-dot" /><span className="hud-dot" />
+            <span className="hud-url">{urlLabel || 'app'}</span>
+          </div>
+          <img className="mockup-video-el" src={image} alt="Desktop preview" />
+          <div className="frame-desktop-base" />
+        </div>
+      )}
+
+      {!isDesktop && (
+        <div className="frame-mobile">
+          <div className="frame-mobile-notch" />
+          <img className="mockup-video-el mockup-video-el--mobile" src={imageMobile} alt="Mobile preview" />
+          <div className="frame-mobile-home" />
+        </div>
+      )}
+    </div>
+  )
+}
+
 function MockupDashboard({ accent }) {
   return (
     <div className="hud-mockup hud-mockup--dashboard">
@@ -173,7 +282,8 @@ function MockupNeural({ accent }) {
   )
 }
 
-const mockupMap = { dashboard: MockupDashboard, shop: MockupShop, terminal: MockupTerminal, neural: MockupNeural }
+const mockupMap = { video: MockupVideo, image: MockupImage, dashboard: MockupDashboard, shop: MockupShop, terminal: MockupTerminal, neural: MockupNeural }
+
 
 /* ─── Fundo reativo (canvas de partículas) ──────────────────────────────────── */
 function ReactiveBackground({ accent, bgGradient }) {
@@ -296,13 +406,6 @@ function Projetos() {
         <div className="progress-fill" style={{ width: `${((active + 1) / projetos.length) * 100}%`, background: projeto.accent }} />
       </div>
 
-      {/* Contador */}
-      <div className="project-counter">
-        <span style={{ color: projeto.accent }}>{String(active + 1).padStart(2,'0')}</span>
-        <span className="counter-sep">/</span>
-        <span>{String(projetos.length).padStart(2,'0')}</span>
-      </div>
-
       {/* Layout principal */}
       <div className="showroom-stage">
 
@@ -312,10 +415,12 @@ function Projetos() {
           <h2 className="hud-title" style={{ '--accent': projeto.accent }}>{projeto.title}</h2>
           <p className="hud-desc">{projeto.description}</p>
 
+          {projeto.metric && (
           <div className="hud-metric">
             <span className="hud-metric-value" style={{ color: projeto.accent }}>{projeto.metric}</span>
             <span className="hud-metric-label">{projeto.metricLabel}</span>
           </div>
+          )}
 
           <div className="hud-tags">
             {projeto.tags.map(t => (
@@ -329,22 +434,27 @@ function Projetos() {
           </div>
 
           <div className="hud-actions">
-            <a href={projeto.liveUrl} className="hud-btn hud-btn--primary" style={{ background: projeto.accent }}>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-              Live Demo
-            </a>
-            <a href={projeto.codeUrl} className="hud-btn hud-btn--ghost" style={{ borderColor: projeto.accent+'66', color: projeto.accent }}>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-              Ver Código
-            </a>
+            {projeto.private ? (
+              <span className="hud-private-badge">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+                Acesso Restrito
+              </span>
+            ) : (
+              <a href={projeto.liveUrl} target="_blank" rel="noopener noreferrer" className="hud-btn hud-btn--primary" style={{ background: projeto.accent, color: '#0a1a0a' }}>
+                {projeto.liveLabel || 'Live Demo'}
+              </a>
+            )}
           </div>
         </div>
 
-        {/* Lado direito — Mockup 3D flutuante */}
+        {/* Lado direito — Mockup */}
         <div className="mockup-stage" key={`m-${active}`}>
-          <div className="mockup-float">
-            <div className="mockup-shadow" style={{ background: projeto.accent }} />
-            <MockupComp accent={projeto.accent} />
+          <div className={['video','image'].includes(projeto.mockup) ? 'mockup-static' : 'mockup-float'}>
+            {!['video','image'].includes(projeto.mockup) && <div className="mockup-shadow" style={{ background: projeto.accent }} />}
+            <MockupComp accent={projeto.accent} video={projeto.video} videoMobile={projeto.videoMobile} image={projeto.image} imageMobile={projeto.imageMobile} urlLabel={projeto.urlLabel} />
           </div>
         </div>
 
