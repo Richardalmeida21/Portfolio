@@ -67,6 +67,21 @@ function App() {
     return () => clearInterval(interval)
   }, [videoEnded])
 
+  // Bloqueia scroll e bounce no mobile (home é sempre full-screen)
+  useEffect(() => {
+    if (window.innerWidth >= 768) return
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    document.documentElement.style.overflow = 'hidden'
+    const prevent = (e) => e.preventDefault()
+    document.addEventListener('touchmove', prevent, { passive: false })
+    return () => {
+      document.body.style.overflow = prev
+      document.documentElement.style.overflow = ''
+      document.removeEventListener('touchmove', prevent)
+    }
+  }, [])
+
   // Quando vídeo acaba, mostra a seção final
   const finalOpacity = videoEnded ? 1 : 0
 

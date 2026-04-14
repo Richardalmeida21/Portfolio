@@ -32,6 +32,16 @@ export default function ParticleCanvas({ contentCenterY }) {
     window.addEventListener('mousemove', onMouseMove)
     window.addEventListener('mouseleave', onMouseLeave)
 
+    // Mobile: repulsão apenas em tap, não em arrasto
+    const onTouchStart = (e) => {
+      const t = e.touches[0]
+      mouse.x = t.clientX
+      mouse.y = t.clientY
+    }
+    const onTouchEnd = () => { mouse.x = -9999; mouse.y = -9999 }
+    window.addEventListener('touchstart', onTouchStart, { passive: true })
+    window.addEventListener('touchend', onTouchEnd, { passive: true })
+
     let particles = []
     let lastCy = null
 
@@ -241,6 +251,8 @@ export default function ParticleCanvas({ contentCenterY }) {
       cancelAnimationFrame(animId)
       window.removeEventListener('mousemove', onMouseMove)
       window.removeEventListener('mouseleave', onMouseLeave)
+      window.removeEventListener('touchstart', onTouchStart)
+      window.removeEventListener('touchend', onTouchEnd)
       window.removeEventListener('resize', resize)
     }
   }, [])

@@ -377,6 +377,30 @@ function Projetos() {
     return () => window.removeEventListener('wheel', onWheel)
   }, [])
 
+  // swipe horizontal no mobile → navega projetos
+  useEffect(() => {
+    const THRESHOLD = 50
+    let touchStartX = 0
+    let touchStartY = 0
+    const onTouchStart = (e) => {
+      touchStartX = e.touches[0].clientX
+      touchStartY = e.touches[0].clientY
+    }
+    const onTouchEnd = (e) => {
+      const dx = e.changedTouches[0].clientX - touchStartX
+      const dy = e.changedTouches[0].clientY - touchStartY
+      if (Math.abs(dx) < THRESHOLD || Math.abs(dy) > Math.abs(dx)) return
+      if (dx < 0) setActive(a => Math.min(a + 1, projetos.length - 1))
+      else        setActive(a => Math.max(a - 1, 0))
+    }
+    window.addEventListener('touchstart', onTouchStart, { passive: true })
+    window.addEventListener('touchend', onTouchEnd, { passive: true })
+    return () => {
+      window.removeEventListener('touchstart', onTouchStart)
+      window.removeEventListener('touchend', onTouchEnd)
+    }
+  }, [])
+
   // teclado
   useEffect(() => {
     const onKey = (e) => {
