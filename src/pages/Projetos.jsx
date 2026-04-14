@@ -101,26 +101,21 @@ function MockupVideo({ video, videoMobile, accent, urlLabel }) {
         </button>
       </div>
 
-      {/* Moldura Desktop */}
-      {isDesktop && (
-        <div className="frame-desktop">
-          <div className="frame-desktop-bar">
-            <span className="hud-dot" /><span className="hud-dot" /><span className="hud-dot" />
-            <span className="hud-url">{urlLabel || 'app'}</span>
-          </div>
-          <video className="mockup-video-el" src={video} autoPlay muted loop playsInline />
-          <div className="frame-desktop-base" />
+      {/* Ambos renderizados sempre — só esconde o inativo */}
+      <div className="frame-desktop" style={!isDesktop ? { display: 'none' } : {}}>
+        <div className="frame-desktop-bar">
+          <span className="hud-dot" /><span className="hud-dot" /><span className="hud-dot" />
+          <span className="hud-url">{urlLabel || 'app'}</span>
         </div>
-      )}
+        <video className="mockup-video-el" src={video} autoPlay muted loop playsInline />
+        <div className="frame-desktop-base" />
+      </div>
 
-      {/* Moldura Mobile */}
-      {!isDesktop && (
-        <div className="frame-mobile">
-          <div className="frame-mobile-notch" />
-          <video className="mockup-video-el mockup-video-el--mobile" src={videoMobile} autoPlay muted loop playsInline />
-          <div className="frame-mobile-home" />
-        </div>
-      )}
+      <div className="frame-mobile" style={isDesktop ? { display: 'none' } : {}}>
+        <div className="frame-mobile-notch" />
+        <video className="mockup-video-el mockup-video-el--mobile" src={videoMobile} autoPlay muted loop playsInline />
+        <div className="frame-mobile-home" />
+      </div>
     </div>
   )
 }
@@ -150,24 +145,20 @@ function MockupImage({ image, imageMobile, accent, urlLabel }) {
         </button>
       </div>
 
-      {isDesktop && (
-        <div className="frame-desktop">
-          <div className="frame-desktop-bar">
-            <span className="hud-dot" /><span className="hud-dot" /><span className="hud-dot" />
-            <span className="hud-url">{urlLabel || 'app'}</span>
-          </div>
-          <img className="mockup-video-el" src={image} alt="Desktop preview" />
-          <div className="frame-desktop-base" />
+      <div className="frame-desktop" style={!isDesktop ? { display: 'none' } : {}}>
+        <div className="frame-desktop-bar">
+          <span className="hud-dot" /><span className="hud-dot" /><span className="hud-dot" />
+          <span className="hud-url">{urlLabel || 'app'}</span>
         </div>
-      )}
+        <img className="mockup-video-el" src={image} alt="Desktop preview" />
+        <div className="frame-desktop-base" />
+      </div>
 
-      {!isDesktop && (
-        <div className="frame-mobile">
-          <div className="frame-mobile-notch" />
-          <img className="mockup-video-el mockup-video-el--mobile" src={imageMobile} alt="Mobile preview" />
-          <div className="frame-mobile-home" />
-        </div>
-      )}
+      <div className="frame-mobile" style={isDesktop ? { display: 'none' } : {}}>
+        <div className="frame-mobile-notch" />
+        <img className="mockup-video-el mockup-video-el--mobile" src={imageMobile} alt="Mobile preview" />
+        <div className="frame-mobile-home" />
+      </div>
     </div>
   )
 }
@@ -377,20 +368,15 @@ function Projetos() {
     return () => window.removeEventListener('wheel', onWheel)
   }, [])
 
-  // swipe horizontal no mobile → navega projetos
+  // swipe vertical no mobile → navega projetos (igual scroll no desktop)
   useEffect(() => {
-    const THRESHOLD = 50
-    let touchStartX = 0
+    const THRESHOLD = 40
     let touchStartY = 0
-    const onTouchStart = (e) => {
-      touchStartX = e.touches[0].clientX
-      touchStartY = e.touches[0].clientY
-    }
+    const onTouchStart = (e) => { touchStartY = e.touches[0].clientY }
     const onTouchEnd = (e) => {
-      const dx = e.changedTouches[0].clientX - touchStartX
       const dy = e.changedTouches[0].clientY - touchStartY
-      if (Math.abs(dx) < THRESHOLD || Math.abs(dy) > Math.abs(dx)) return
-      if (dx < 0) setActive(a => Math.min(a + 1, projetos.length - 1))
+      if (Math.abs(dy) < THRESHOLD) return
+      if (dy < 0) setActive(a => Math.min(a + 1, projetos.length - 1))
       else        setActive(a => Math.max(a - 1, 0))
     }
     window.addEventListener('touchstart', onTouchStart, { passive: true })
