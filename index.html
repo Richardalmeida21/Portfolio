@@ -1,67 +1,16 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meu Portfolio</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <!-- Seção Hero com Vídeo de Fundo Controlado por Scroll -->
-    <section class="hero">
-        <div class="video-container">
-            <video id="scroll-video" muted playsinline preload="auto">
-                <source src="Video_Fundo_Portfolio.mp4" type="video/mp4">
-            </video>
-        </div>
-        <div class="hero-content">
-            <h1>Olá, eu sou <span class="highlight">[Seu Nome]</span></h1>
-            <p class="subtitle">Desenvolvedor & Designer</p>
-            <p class="scroll-hint">Role para explorar ↓</p>
-        </div>
-    </section>
-
-    <!-- Seção Sobre -->
-    <section class="about" id="sobre">
-        <div class="container">
-            <h2>Sobre Mim</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-        </div>
-    </section>
-
-    <!-- Seção Projetos -->
-    <section class="projects" id="projetos">
-        <div class="container">
-            <h2>Projetos</h2>
-            <div class="project-grid">
-                <div class="project-card">
-                    <div class="project-placeholder"></div>
-                    <h3>Projeto 1</h3>
-                    <p>Descrição do projeto</p>
-                </div>
-                <div class="project-card">
-                    <div class="project-placeholder"></div>
-                    <h3>Projeto 2</h3>
-                    <p>Descrição do projeto</p>
-                </div>
-                <div class="project-card">
-                    <div class="project-placeholder"></div>
-                    <h3>Projeto 3</h3>
-                    <p>Descrição do projeto</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Seção Contato -->
-    <section class="contact" id="contato">
-        <div class="container">
-            <h2>Contato</h2>
-            <p>Entre em contato para colaborarmos juntos.</p>
-            <a href="mailto:seu@email.com" class="btn">seu@email.com</a>
-        </div>
-    </section>
-
-    <script src="script.js"></script>
-</body>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>portfolio-react</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>
