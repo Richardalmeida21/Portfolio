@@ -5,10 +5,12 @@ import './index.css'
 import App from './App.jsx'
 import Sobre from './pages/Sobre.jsx'
 import Projetos from './pages/Projetos.jsx'
+import CustomCursor from './components/CustomCursor.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
+      <CustomCursor />
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/sobre" element={<Sobre />} />
