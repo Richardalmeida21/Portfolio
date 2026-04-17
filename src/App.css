@@ -114,8 +114,7 @@ html {
   pointer-events: none;
   max-width: 45%;
   padding: 1.5rem;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.7);
   border-radius: 1rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
   animation: float 6s ease-in-out infinite;
@@ -868,12 +867,10 @@ html {
 
 /* Card base — glassmorphism */
 .bento-card {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(12, 10, 22, 0.92);
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 1.25rem;
   padding: 1.75rem;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
   position: relative;
   overflow: hidden;
   opacity: 0;
@@ -1200,6 +1197,77 @@ html {
     0 0 18px rgba(167, 139, 250, 0.35),
     0 0 40px rgba(244, 114, 182, 0.12);
   transform: translateY(-3px) scale(1.04);
+}
+
+/* CTA — Veja projetos */
+.sobre-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 4.5rem;
+  padding: 4rem 2rem 5rem;
+  text-align: center;
+}
+
+.sobre-cta-label {
+  font-size: 0.72rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: rgba(167, 139, 250, 0.7);
+}
+
+.sobre-cta-title {
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.92);
+  letter-spacing: -0.02em;
+}
+
+/* Wrapper para o botão com borda animada */
+.sobre-cta-btn-wrap {
+  position: relative;
+  margin-top: 1rem;
+  border-radius: 50px;
+  padding: 2px;
+  background: conic-gradient(
+    from var(--angle, 0deg),
+    #a78bfa, #f472b6, #38bdf8, #f472b6, #a78bfa
+  );
+  animation: cta-border-spin 3s linear infinite;
+}
+
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes cta-border-spin {
+  to { --angle: 360deg; }
+}
+
+.sobre-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 2.5rem;
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: #fff;
+  background: rgba(5, 4, 10, 0.92);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.sobre-cta-btn:hover {
+  background: rgba(167, 139, 250, 0.08);
+  transform: translateY(-2px);
 }
 
 /* Blobs atmosféricos */

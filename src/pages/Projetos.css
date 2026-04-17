@@ -28,6 +28,7 @@
   width: 100%;
   height: 100%;
   opacity: 0.45;
+  will-change: contents;
 }
 
 /* ── Barra de progresso ───────────────────────────── */
@@ -263,6 +264,7 @@
 .mockup-float {
   position: relative;
   animation: mockup-float 5s ease-in-out infinite;
+  will-change: transform;
 }
 
 @keyframes mockup-float {
@@ -291,12 +293,13 @@
 /* ── HUD mockup base ──────────────────────────────── */
 .hud-mockup {
   width: clamp(280px, 42vw, 580px);
-  background: rgba(10,8,20,0.88);
+  background: rgba(10,8,20,0.92);
   border: 1px solid rgba(255,255,255,0.09);
   border-radius: 14px;
   overflow: hidden;
-  backdrop-filter: blur(20px);
   box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 .hud-bar {

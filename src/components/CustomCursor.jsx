@@ -15,8 +15,8 @@ export default function CustomCursor() {
     if (!dot || !ring || !mirror) return
 
     let mx = 0, my = 0
-    let r1x = 0, r1y = 0   // ring lag
-    let r2x = 0, r2y = 0   // mirror lag (mais lento)
+    let r1x = 0, r1y = 0
+    let r2x = 0, r2y = 0
     let raf
     let isHover = false
 
@@ -38,37 +38,39 @@ export default function CustomCursor() {
       raf = requestAnimationFrame(loop)
     }
 
-    const onEnter = () => {
-      isHover = true
-      dot.classList.add('cursor-dot--hover')
-      ring.classList.add('cursor-ring--hover')
-      mirror.classList.add('cursor-mirror--hover')
+    // Event delegation: captura hover em interativos sem MutationObserver
+    const hoverSelectors = 'a, button, [role="button"], .nav-thumb, .mockup-tab'
+
+    const onOver = (e) => {
+      if (!isHover && e.target.closest(hoverSelectors)) {
+        isHover = true
+        dot.classList.add('cursor-dot--hover')
+        ring.classList.add('cursor-ring--hover')
+        mirror.classList.add('cursor-mirror--hover')
+      }
     }
-    const onLeave = () => {
-      isHover = false
-      dot.classList.remove('cursor-dot--hover')
-      ring.classList.remove('cursor-ring--hover')
-      mirror.classList.remove('cursor-mirror--hover')
+    const onOut = (e) => {
+      if (isHover && e.target.closest(hoverSelectors)) {
+        // Verifica se relatedTarget não é outro interativo
+        if (!e.relatedTarget || !e.relatedTarget.closest?.(hoverSelectors)) {
+          isHover = false
+          dot.classList.remove('cursor-dot--hover')
+          ring.classList.remove('cursor-ring--hover')
+          mirror.classList.remove('cursor-mirror--hover')
+        }
+      }
     }
 
-    const bindLinks = () => {
-      document.querySelectorAll('a, button, [role="button"], .nav-thumb, .mockup-tab').forEach(el => {
-        el.addEventListener('mouseenter', onEnter)
-        el.addEventListener('mouseleave', onLeave)
-      })
-    }
-
-    const observer = new MutationObserver(bindLinks)
-    observer.observe(document.body, { childList: true, subtree: true })
-
-    window.addEventListener('mousemove', onMove)
-    bindLinks()
+    window.addEventListener('mousemove', onMove, { passive: true })
+    document.addEventListener('mouseover', onOver, { passive: true })
+    document.addEventListener('mouseout', onOut, { passive: true })
     raf = requestAnimationFrame(loop)
 
     return () => {
       window.removeEventListener('mousemove', onMove)
+      document.removeEventListener('mouseover', onOver)
+      document.removeEventListener('mouseout', onOut)
       cancelAnimationFrame(raf)
-      observer.disconnect()
     }
   }, [])
 

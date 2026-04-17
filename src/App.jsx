@@ -9,7 +9,7 @@ function App() {
   const heroRef = useRef(null)
   const contentRef = useRef(null)
   const [videoDuration, setVideoDuration] = useState(0)
-  const [videoEnded, setVideoEnded] = useState(false)
+  const [videoEnded, setVideoEnded] = useState(() => !!sessionStorage.getItem('introSeen'))
   const [videoObjPos, setVideoObjPos] = useState('50% center')
   const [contentCenterY, setContentCenterY] = useState(null)
   const navigate = useNavigate()
@@ -23,6 +23,7 @@ function App() {
     }
 
     const handleVideoEnded = () => {
+      sessionStorage.setItem('introSeen', 'true')
       setVideoEnded(true)
     }
 
@@ -63,7 +64,7 @@ function App() {
       if (rect) setContentCenterY(rect.top + rect.height / 2)
     }
     measure() // mede imediatamente
-    const interval = setInterval(measure, 100) // recalcula a cada 100ms para acompanhar zoom
+    const interval = setInterval(measure, 500) // recalcula a cada 500ms para acompanhar zoom
     return () => clearInterval(interval)
   }, [videoEnded])
 
@@ -106,7 +107,7 @@ function App() {
           className="hero-video"
           muted
           playsInline
-          preload="auto"
+          preload="metadata"
           autoPlay
           playbackRate={2.0}
           style={{

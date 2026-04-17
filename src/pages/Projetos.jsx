@@ -68,6 +68,7 @@ const projetos = [
     statusColor: '#a78bfa',
     metric: 'GPT-4o', metricLabel: 'integrado',
     liveUrl: '#', codeUrl: '#',
+    comingSoon: true,
     accent: '#C084FC',
     bgGradient: 'radial-gradient(ellipse 80% 60% at 50% 50%, rgba(192,132,252,0.2) 0%, transparent 70%)',
     mockup: 'neural',
@@ -107,13 +108,13 @@ function MockupVideo({ video, videoMobile, accent, urlLabel }) {
           <span className="hud-dot" /><span className="hud-dot" /><span className="hud-dot" />
           <span className="hud-url">{urlLabel || 'app'}</span>
         </div>
-        <video className="mockup-video-el" src={video} autoPlay muted loop playsInline />
+        <video className="mockup-video-el" src={video} autoPlay muted loop playsInline preload="metadata" />
         <div className="frame-desktop-base" />
       </div>
 
       <div className="frame-mobile" style={isDesktop ? { display: 'none' } : {}}>
         <div className="frame-mobile-notch" />
-        <video className="mockup-video-el mockup-video-el--mobile" src={videoMobile} autoPlay muted loop playsInline />
+        <video className="mockup-video-el mockup-video-el--mobile" src={videoMobile} autoPlay muted loop playsInline preload="metadata" />
         <div className="frame-mobile-home" />
       </div>
     </div>
@@ -287,17 +288,20 @@ function ReactiveBackground({ accent, bgGradient }) {
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
-    const ctx = canvas.getContext('2d')
+    const ctx = canvas.getContext('2d', { alpha: true })
 
+    let resizeTimer
     const resize = () => {
       canvas.width = canvas.offsetWidth
       canvas.height = canvas.offsetHeight
     }
     resize()
-    window.addEventListener('resize', resize)
+    const onResize = () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(resize, 150) }
+    window.addEventListener('resize', onResize)
 
-    // partículas flutuantes
-    const particles = Array.from({ length: 55 }, () => ({
+    // partículas flutuantes — reduzidas
+    const count = window.innerWidth < 600 ? 20 : 35
+    const particles = Array.from({ length: count }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
       vx: (Math.random() - 0.5) * 0.3,
@@ -306,9 +310,15 @@ function ReactiveBackground({ accent, bgGradient }) {
       opacity: Math.random() * 0.4 + 0.1,
     }))
 
-    const draw = () => {
+    let lastFrame = 0
+    const draw = (now) => {
+      rafRef.current = requestAnimationFrame(draw)
+      if (now - lastFrame < 33) return  // ~30fps
+      lastFrame = now
+
       ctx.clearRect(0, 0, canvas.width, canvas.height)
-      particles.forEach(p => {
+      const color = accentRef.current
+      for (const p of particles) {
         p.x += p.vx; p.y += p.vy
         if (p.x < 0) p.x = canvas.width
         if (p.x > canvas.width) p.x = 0
@@ -316,15 +326,14 @@ function ReactiveBackground({ accent, bgGradient }) {
         if (p.y > canvas.height) p.y = 0
         ctx.beginPath()
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
-        ctx.fillStyle = accentRef.current
+        ctx.fillStyle = color
         ctx.globalAlpha = p.opacity
         ctx.fill()
-      })
+      }
       ctx.globalAlpha = 1
-      rafRef.current = requestAnimationFrame(draw)
     }
-    draw()
-    return () => { cancelAnimationFrame(rafRef.current); window.removeEventListener('resize', resize) }
+    rafRef.current = requestAnimationFrame(draw)
+    return () => { cancelAnimationFrame(rafRef.current); clearTimeout(resizeTimer); window.removeEventListener('resize', onResize) }
   }, [])
 
   return (
@@ -453,6 +462,10 @@ function Projetos() {
                   <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                 </svg>
                 Acesso Restrito
+              </span>
+            ) : projeto.comingSoon ? (
+              <span className="hud-btn hud-btn--primary" style={{ background: projeto.accent + '44', color: projeto.accent, cursor: 'default' }}>
+                Em breve
               </span>
             ) : (
               <a href={projeto.liveUrl} target="_blank" rel="noopener noreferrer" className="hud-btn hud-btn--primary" style={{ background: projeto.accent, color: '#0a1a0a' }}>

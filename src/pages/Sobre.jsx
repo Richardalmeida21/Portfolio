@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import '../App.css'
 
@@ -77,11 +78,16 @@ function Sobre() {
   const sectionRef = useRef(null)
 
   useEffect(() => {
-    document.body.style.overflow = 'auto'
-    document.body.style.height = 'auto'
+    const html = document.documentElement
     const root = document.getElementById('root')
-    if (root) { root.style.overflow = 'auto'; root.style.height = 'auto' }
+    html.style.overflow = 'auto'
+    html.style.height = 'auto'
+    document.body.style.overflow = 'visible'
+    document.body.style.height = 'auto'
+    if (root) { root.style.overflow = 'visible'; root.style.height = 'auto' }
     return () => {
+      html.style.overflow = ''
+      html.style.height = ''
       document.body.style.overflow = 'hidden'
       document.body.style.height = '100vh'
       if (root) { root.style.overflow = 'hidden'; root.style.height = '100vh' }
@@ -108,6 +114,8 @@ function Sobre() {
     document.querySelectorAll('.bento-card').forEach(c => observer.observe(c))
     return () => observer.disconnect()
   }, [])
+
+  const navigate = useNavigate()
 
   const skills = [
     'React', 'Node.js', 'TypeScript', 'Java', 'Spring Boot',
@@ -226,6 +234,20 @@ function Sobre() {
               {[...skills, ...skills].map((tag, i) => (
                 <span className="skill-tag" key={i}>{tag}</span>
               ))}
+            </div>
+          </div>
+
+          <div className="sobre-cta">
+            <p className="sobre-cta-label">Quer ver o resultado disso tudo?</p>
+            <h3 className="sobre-cta-title">Veja alguns projetos autorais</h3>
+            <div className="sobre-cta-btn-wrap">
+              <button className="sobre-cta-btn" onClick={() => navigate('/projetos')}>
+                Explorar Projetos
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
