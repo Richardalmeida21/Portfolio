@@ -1,7 +1,7 @@
 /* Usa cursor customizado via imagem */
 @media (hover: hover) {
   *, *::before, *::after {
-    cursor: url('/mouse.png'), auto !important;
+    cursor: url('/mouse.png') 0 0, auto !important;
   }
 }
 
