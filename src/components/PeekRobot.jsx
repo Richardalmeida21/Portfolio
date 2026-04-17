@@ -21,29 +21,28 @@ export default function PeekRobot() {
   const [hovered, setHovered] = useState(false)
   const hoverTimer = useRef(null)
   const messagesEndRef = useRef(null)
+  const cycleKey = useRef(0)
 
   // Ciclo do botão sincronizado com a animação do robô (7s, delay 2s)
   // Robot: 10-22% saindo, 22-58% fora, 58-70% voltando
+  // Reinicia quando hover termina (animação CSS reinicia do 0)
   useEffect(() => {
-    if (chatOpen) { setShowBtn(false); return }
+    if (chatOpen || hovered) { setShowBtn(false); return }
+    const key = ++cycleKey.current
     const DURATION = 7000
-    const DELAY = 2000
     let timeouts = []
     const runCycle = () => {
-      // Botão aparece quando robô está fora (22% de 7s = 1540ms)
-      timeouts.push(setTimeout(() => setShowBtn(true), 1540))
-      // Botão some antes do robô voltar (56% de 7s = 3920ms)
-      timeouts.push(setTimeout(() => setShowBtn(false), 3920))
-      // Próximo ciclo
-      timeouts.push(setTimeout(runCycle, DURATION))
+      if (cycleKey.current !== key) return
+      timeouts.push(setTimeout(() => { if (cycleKey.current === key) setShowBtn(true) }, 1540))
+      timeouts.push(setTimeout(() => { if (cycleKey.current === key) setShowBtn(false) }, 3920))
+      timeouts.push(setTimeout(() => { if (cycleKey.current === key) runCycle() }, DURATION))
     }
-    const initial = setTimeout(runCycle, DELAY)
+    runCycle()
     return () => {
-      clearTimeout(initial)
       timeouts.forEach(clearTimeout)
       setShowBtn(false)
     }
-  }, [chatOpen])
+  }, [chatOpen, hovered])
 
   const handleMouseEnter = () => {
     clearTimeout(hoverTimer.current)
@@ -51,7 +50,7 @@ export default function PeekRobot() {
   }
 
   const handleMouseLeave = () => {
-    hoverTimer.current = setTimeout(() => setHovered(false), 300)
+    hoverTimer.current = setTimeout(() => setHovered(false), 50)
   }
 
   // Quando abre o chat, mostra as mensagens do Cody com delay

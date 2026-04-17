@@ -6,7 +6,7 @@
   z-index: 99990;
   pointer-events: auto;
   filter: drop-shadow(0 0 12px rgba(167, 139, 250, 0.35));
-  animation: robot-loop 7s ease-in-out 2s infinite;
+  animation: robot-loop 7s ease-in-out infinite;
 }
 
 /* Área invisível maior para evitar flickering */
@@ -31,12 +31,13 @@
 .peek-robot--hovered {
   animation: none !important;
   right: 20px !important;
-  transition: right 0.4s ease;
+  transition: right 1s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .peek-robot--hovered .robot-arm--left {
   animation: none;
   transform: rotate(40deg);
+  transition: transform 0.8s ease;
 }
 
 .peek-robot--hovered .robot-speech-btn {
@@ -47,7 +48,7 @@
 
 /* Quando sai o mouse, volta suavemente antes de retomar animação */
 .peek-robot:not(.peek-robot--hovered) {
-  transition: right 0.6s ease;
+  transition: right 1.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /*
@@ -199,7 +200,7 @@
 .robot-arm--left {
   left: -7px;
   transform-origin: top center;
-  animation: robot-wave 7s ease-in-out 2s infinite;
+  animation: robot-wave 7s ease-in-out infinite;
 }
 
 /* Braço direito — parado */
